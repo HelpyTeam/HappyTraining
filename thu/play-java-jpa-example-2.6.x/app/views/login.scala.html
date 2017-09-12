@@ -2,7 +2,7 @@
 
 @main("Login Page") {
   <script type='text/javascript' src='@routes.Assets.at("javascripts/index.js")'></script>
-  <form method="POST">
+  <form method="POST" action="@routes.UserController.index()">
     @helper.CSRF.formField
     <h1>Sign in</h1>
     <input type="text" name="username" placeholder="Username"/> <br/>

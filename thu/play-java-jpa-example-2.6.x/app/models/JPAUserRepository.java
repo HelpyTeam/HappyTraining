@@ -25,6 +25,11 @@ public class JPAUserRepository implements UserRepository{
     public CompletionStage<Stream<User>> list() { return supplyAsync(() -> wrap(em -> list(em)), executionContext); }
 
     @Override
+    public CompletionStage<User> login(User user) {
+        return  supplyAsync(() -> wrap(em -> getUser(em, user)), executionContext);
+    }
+
+    @Override
     public CompletionStage<User> add(User user) {
         return supplyAsync(() -> wrap(em -> insert(em, user)), executionContext);
     }
@@ -43,14 +48,13 @@ public class JPAUserRepository implements UserRepository{
         return users.stream();
     }
 
-    private User getUser(EntityManager em, String username, String password){
-        User user = em.createQuery("select u from User u " +
-                "where u.username = " + username + " and  u.password = " + password).getSingleResult();
+    private User getUser(EntityManager em, User inputUser){
+        User user = (User) em.createQuery("select u from User u " +
+                "where u.username = :username and  u.password = :password")
+                .setParameter("username", inputUser.username)
+                .setParameter("password", inputUser.password)
+                .getSingleResult();
         return user;
     }
 
-    @Override
-    public CompletionStage<User> login() {
-
-    }
 }

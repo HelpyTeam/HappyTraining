@@ -2,8 +2,8 @@ package controllers;
 
 import models.User;
 import models.UserRepository;
-import play.core.j.HttpExecutionContext;
 import play.data.FormFactory;
+import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -26,10 +26,14 @@ public class UserController extends Controller {
 
     public Result index(){ return ok( views.html.login.render()); }
 
+    public Result welcome(){ return ok( views.html.welcome.render()); }
+
     public CompletionStage<Result> authentication(){
         User user = formFactory.form(User.class).bindFromRequest().get();
-        return userRepository.login(user).thenApplyAsync(p -> {
-            return redirect(routes.PersonController.index());
+        session("USERNAME", user.username);
+        return userRepository.login(user).thenApplyAsync(u -> {
+            return redirect("/welcome");
         }, ec.current());
     }
+
 }
