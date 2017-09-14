@@ -1,0 +1,7 @@
+@()
+
+@main("Welcome Page") {
+  <script type='text/javascript' src='@routes.Assets.at("javascripts/index.js")'></script>
+  <h1>Welcome, @session.get("USERNAME")</h1>
+
+}
